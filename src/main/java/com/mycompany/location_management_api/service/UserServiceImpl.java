@@ -8,6 +8,8 @@ import com.mycompany.location_management_api.exception.ErrorModel;
 import com.mycompany.location_management_api.model.UserModel;
 import com.mycompany.location_management_api.repository.UserEntityRepository;
 import com.mycompany.location_management_api.validation.UserValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -17,6 +19,8 @@ import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private UserEntityRepository entityRepository;
@@ -47,11 +51,14 @@ public class UserServiceImpl implements UserService {
             errorModel.setMessage("Incorrect email or Password");
 
             errorList.add(errorModel);
+            logger.warn("Invalid login attempt");
             throw new BusinessException(errorList);
         } else {
             result = true;
+            logger.info("Login was success");
         }
 
+        logger.debug("Exiting method login");
         return result;
     }
 
