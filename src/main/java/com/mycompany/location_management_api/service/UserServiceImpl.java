@@ -71,7 +71,6 @@ public class UserServiceImpl implements UserService {
         if(!CollectionUtils.isEmpty(errorModelList)){
             throw new BusinessException(errorModelList);
         }
-        UserEntity userEntity = userConverter.convertModelToEntity(userModel);
 
         // check if user already exist
         UserEntity ue = entityRepository.findByEmail(userModel.getEmail());
@@ -84,6 +83,7 @@ public class UserServiceImpl implements UserService {
             errorList.add(errorModel);
             throw new BusinessException(errorList);
         }
+        UserEntity userEntity = userConverter.convertModelToEntity(userModel);
         UserEntity  userEntity1 = entityRepository.save(userEntity);
 
         return userEntity1.getId();

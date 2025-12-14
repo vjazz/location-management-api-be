@@ -5,7 +5,6 @@ import com.mycompany.location_management_api.model.UserModel;
 import com.mycompany.location_management_api.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,8 +18,18 @@ public class UserController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
-    private UserService userService;
+//    @Autowired
+    private UserService userService = new UserService() {
+        @Override
+        public boolean login(UserModel userModel) throws BusinessException {
+            return false;
+        }
+
+        @Override
+        public Long reqister(UserModel userModel) throws BusinessException {
+            return 0L;
+        }
+    };
 
     @PostMapping("/users")
     public ResponseEntity<Boolean> login(@RequestBody UserModel userModel) throws BusinessException {
@@ -37,8 +46,6 @@ public class UserController {
 
         Long result = userService.reqister(userModel);
 
-        ResponseEntity<Long> responseEntity = new ResponseEntity<>(result, HttpStatus.CREATED);
-
-        return responseEntity;
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 }
